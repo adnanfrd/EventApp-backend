@@ -1,22 +1,17 @@
 import express from 'express';
-import User from '../models/userModel.js';
+import Patient from '../models/userModel.js'; 
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { patientName, doctorName, date } = req.body;
 
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: "User already exists" });
-        }
+        const newPatient = new Patient({ patientName, doctorName, date });
 
-        const newUser = new User({ name, email, password });
+        await newPatient.save();
 
-        await newUser.save();
-
-        res.status(201).json({ message: "User created successfully", user: newUser });
+        res.status(201).json({ message: "Patient record created successfully", patient: newPatient });
 
     } catch (error) {
         console.error(error);
@@ -26,8 +21,8 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const users = await User.find();
-        res.status(200).json(users);
+        const patients = await Patient.find();
+        res.status(200).json(patients);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
@@ -36,11 +31,11 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
+        const patient = await Patient.findById(req.params.id);
+        if (!patient) {
+            return res.status(404).json({ message: "Patient not found" });
         }
-        res.status(200).json(user);
+        res.status(200).json(patient);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
@@ -49,19 +44,19 @@ router.get('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { patientName, doctorName, date } = req.body;
 
-        const updatedUser = await User.findByIdAndUpdate(
+        const updatedPatient = await Patient.findByIdAndUpdate(
             req.params.id,
-            { name, email, password },
+            { patientName, doctorName, date },
             { new: true } 
         );
 
-        if (!updatedUser) {
-            return res.status(404).json({ message: "User not found" });
+        if (!updatedPatient) {
+            return res.status(404).json({ message: "Patient not found" });
         }
 
-        res.status(200).json({ message: "User updated successfully", user: updatedUser });
+        res.status(200).json({ message: "Patient record updated successfully", patient: updatedPatient });
 
     } catch (error) {
         console.error(error);
@@ -71,11 +66,11 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedUser = await User.findByIdAndDelete(req.params.id);
-        if (!deletedUser) {
-            return res.status(404).json({ message: "User not found" });
+        const deletedPatient = await Patient.findByIdAndDelete(req.params.id);
+        if (!deletedPatient) {
+            return res.status(404).json({ message: "Patient not found" });
         }
-        res.status(200).json({ message: "User deleted successfully" });
+        res.status(200).json({ message: "Patient record deleted successfully" });
 
     } catch (error) {
         console.error(error);

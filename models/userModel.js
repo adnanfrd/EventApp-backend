@@ -1,19 +1,18 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    name: {
+    patientName: {
         type: String,
         required: true
     },
-    email: {
+    doctorName: {
         type: String,
         required: true,
         unique: true
     },
-    password: {
+    date: {
         type: String,
         required: true,
-        minLength: 8
     }
 });
 
