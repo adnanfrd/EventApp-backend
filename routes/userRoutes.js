@@ -1,5 +1,5 @@
 import express from 'express';
-import Patient from '../models/userModel.js'; 
+import User from '../models/userModel.js'; 
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ router.post('/', async (req, res) => {
     try {
         const { patientName, doctorName, date } = req.body;
 
-        const newPatient = new Patient({ patientName, doctorName, date });
+        const newPatient = new User({ patientName, doctorName, date });
 
         await newPatient.save();
 
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const patients = await Patient.find();
+        const patients = await User.find();
         res.status(200).json(patients);
     } catch (error) {
         console.error(error);
@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const patient = await Patient.findById(req.params.id);
+        const patient = await User.findById(req.params.id);
         if (!patient) {
             return res.status(404).json({ message: "Patient not found" });
         }
@@ -46,7 +46,7 @@ router.put('/:id', async (req, res) => {
     try {
         const { patientName, doctorName, date } = req.body;
 
-        const updatedPatient = await Patient.findByIdAndUpdate(
+        const updatedPatient = await User.findByIdAndUpdate(
             req.params.id,
             { patientName, doctorName, date },
             { new: true } 
@@ -66,7 +66,7 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedPatient = await Patient.findByIdAndDelete(req.params.id);
+        const deletedPatient = await User.findByIdAndDelete(req.params.id);
         if (!deletedPatient) {
             return res.status(404).json({ message: "Patient not found" });
         }
