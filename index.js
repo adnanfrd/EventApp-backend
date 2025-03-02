@@ -8,6 +8,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
 const dbURL =  process.env.MONGO_URI;
 
 app.use(express.json());
